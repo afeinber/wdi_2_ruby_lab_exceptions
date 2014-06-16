@@ -1,26 +1,42 @@
+#Create our own exception class
+
 class PersonValidError < StandardError
+
+  # def initialize(error_msg)
+  #   super
+  # end
 end
 
 class Person
   attr_accessor :name, :age
 
-  def initialize(name, age)
-    @name = name
-    @age = age
+  def initialize(person)
+    @name = person.keys[0]
+    @age = person[@name].split(' ')[0].to_i
+    @sex = person[@name].split(' ')[1]
+  end
+
+  def validate_name
+    raise PersonValidError.new("Invalid name") if name.length < 2 || name.length > 10
+  end
+
+  def validate_age
+    raise PersonValidError.new("Invalid age") if age < 0  || age > 115
   end
 end
 
+begin
+tom = Person.new('tom', -57)
+tom.validate_age
 
-tom = Person.new('tom', 57)
-puts "tom's name is " + (tom.valid_name? ? "valid" : "not valid")
-puts "tom's age is " + (tom.valid_age? ? "valid" : "not valid")
 
 ed = Person.new('ed', 111)
-puts "ed's name is " + (ed.valid_name? ? "valid" : "not valid")
-puts "ed's age is " + (ed.valid_age? ? "valid" : "not valid")
 
-jane = Person.new('j', 33)
-puts "jane's name is " + (jane.valid_name? ? "valid" : "not valid")
-puts "jane's age is " + (jane.valid_age? ? "valid" : "not valid")
+jane = Person.new('j', 333)
+
+rescue PersonValidError => e
+ puts "Loool bad person"
+end
+
 
 
